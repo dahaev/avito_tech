@@ -204,3 +204,24 @@ func GetOrderById(code string) *Order {
 
 	return ord
 }
+
+func GetClientByID(client_id string) *Client {
+	db, err := sql.Open("mysql", "root:@tcp(127.0.0.1:3306)/avito_tech")
+	cli := &Client{}
+	if err != nil {
+		fmt.Println("err", err.Error())
+		return nil
+	}
+	defer db.Close()
+	results, err := db.Query("SELECT * FROM clients WHERE client_id=?", client_id)
+	if err != nil {
+		fmt.Println("err", err.Error())
+	}
+	if results.Next() {
+		err = results.Scan(&cli.Client_id, &cli.Balance_main, &cli.Balance_reserved)
+		if err != nil {
+			return nil
+		}
+	}
+	return cli
+}
