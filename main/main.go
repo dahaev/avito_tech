@@ -15,6 +15,7 @@ func main() {
 	router.PATCH("/orders/:order_id", getOrderByID)
 	router.POST("/clients", AddClient)
 	router.POST("/orders", AddOrder)
+	router.GET("/clients/:clientID", GetClientByID)
 	router.Run("localhost:8080")
 
 }
@@ -58,4 +59,14 @@ func getOrderByID(c *gin.Context) {
 		c.IndentedJSON(http.StatusOK, order)
 	}
 
+}
+
+func GetClientByID(c *gin.Context) {
+	client_id := c.Param("clientID")
+	cli := models.GetClientByID(client_id)
+	if cli == nil {
+		c.AbortWithStatus(http.StatusNotFound)
+	} else {
+		c.IndentedJSON(http.StatusOK, cli)
+	}
 }
