@@ -225,3 +225,28 @@ func GetClientByID(client_id string) *Client {
 	}
 	return cli
 }
+
+func GetReports() []Report {
+	db, err := sql.Open("mysql", "root:@tcp(127.0.0.1:3306)/avito_tech")
+	if err != nil {
+		fmt.Println("Err", err.Error())
+	}
+	fmt.Println("Connect is OK")
+
+	defer db.Close()
+	result, err := db.Query("SELECT * FROM report")
+	if err != nil {
+		fmt.Println("err", err.Error())
+	}
+	report := []Report{}
+	for result.Next() {
+		var rep Report
+		err := result.Scan(&rep.ReportId, &rep.ReportClientID, &rep.ReportServiceID, &rep.ReportCost)
+		if err != nil {
+			panic(err)
+		}
+		report = append(report, rep)
+	}
+	fmt.Println(report)
+	return report
+}

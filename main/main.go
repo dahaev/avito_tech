@@ -11,11 +11,11 @@ func main() {
 
 	router := gin.Default()
 	router.GET("/clients", GetAllClients)
-	//router.GET("/orders")
 	router.PATCH("/orders/:order_id", getOrderByID)
 	router.POST("/clients", AddClient)
 	router.POST("/orders", AddOrder)
 	router.GET("/clients/:clientID", GetClientByID)
+	router.GET("report", GetReports)
 	router.Run("localhost:8080")
 
 }
@@ -69,4 +69,11 @@ func GetClientByID(c *gin.Context) {
 	} else {
 		c.IndentedJSON(http.StatusOK, cli)
 	}
+}
+
+func GetReports(c *gin.Context) {
+	reports := models.GetReports()
+	fmt.Println(reports)
+	c.JSONP(http.StatusOK, reports)
+
 }
